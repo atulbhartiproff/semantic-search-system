@@ -1,2 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
 venv/
-.venv/
+.env
+
+artifacts/
+hf_cache/
+
+.DS_Store
