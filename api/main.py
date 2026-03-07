@@ -43,13 +43,14 @@ def query_endpoint(req: QueryRequest):
 
     if cached:
         entry, sim = cached
+
         return {
             "query": query,
             "cache_hit": True,
             "matched_query": entry["query"],
-            "similarity_score": sim,
+            "similarity_score": float(sim),  # FIX
             "result": entry["result"],
-            "dominant_cluster": cluster_id
+            "dominant_cluster": int(cluster_id)  # FIX
         }
 
     result = results[0]["document"]
@@ -62,14 +63,20 @@ def query_endpoint(req: QueryRequest):
         "matched_query": None,
         "similarity_score": None,
         "result": result,
-        "dominant_cluster": cluster_id
+        "dominant_cluster": int(cluster_id)  # FIX
     }
-
 
 @app.get("/cache/stats")
 def cache_stats():
-    return cache.stats()
 
+    stats = cache.stats()
+
+    return {
+        "total_entries": int(stats["total_entries"]),
+        "hit_count": int(stats["hit_count"]),
+        "miss_count": int(stats["miss_count"]),
+        "hit_rate": float(stats["hit_rate"])
+    }
 
 @app.delete("/cache")
 def clear_cache():
